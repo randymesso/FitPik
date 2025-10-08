@@ -1,17 +1,29 @@
-//
-//  FitPikApp.swift
-//  FitPik
-//
-//  Created by Randy Messo on 10/7/25.
-//
-
 import SwiftUI
+import CloudKit
+
+// MARK: - App entry
 
 @main
 struct FitPikApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
+  @StateObject private var appState = AppState()
+  
+  var body: some Scene {
+    WindowGroup {
+      Group {
+        if appState.showSplash {
+          SplashView()
+            .environmentObject(appState)
+        } else if appState.needsOnboarding {
+          OnboardingContainerView()
+            .environmentObject(appState)
+        } else {
+          MainContentView()
+            .environmentObject(appState)
         }
+      }
+      .onAppear {
+        appState.checkLaunchState()
+      }
     }
+  }
 }

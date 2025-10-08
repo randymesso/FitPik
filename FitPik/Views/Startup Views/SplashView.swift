@@ -1,3 +1,6 @@
+import SwiftUI
+
+
 struct SplashView: View {
   @EnvironmentObject var appState: AppState
   @State private var animateLetters = false
