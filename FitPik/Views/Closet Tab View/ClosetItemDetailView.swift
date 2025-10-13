@@ -6,9 +6,7 @@ struct ClosetItemDetailView: View {
     var onSave: (ClosetItem) -> Void
     var onDelete: (ClosetItem) -> Void
     @Environment(\.presentationMode) var presentation
-    
-    @State private var tagText: String = ""
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 12) {
@@ -22,7 +20,7 @@ struct ClosetItemDetailView: View {
                 } else {
                     Rectangle().fill(Color.gray.opacity(0.12)).frame(height: 260)
                 }
-                
+
                 Picker("Category", selection: $item.category) {
                     ForEach(ClosetCategory.allCases) { c in
                         Text(c.rawValue).tag(c)
@@ -30,27 +28,11 @@ struct ClosetItemDetailView: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
-                
-                HStack {
-                    TextField("Add tag", text: $tagText)
-                        .textFieldStyle(.roundedBorder)
-                    Button(action: {
-                        let t = tagText.trimmingCharacters(in: .whitespacesAndNewlines)
-                        guard !t.isEmpty else { return }
-                        item.tags.append(t)
-                        tagText = ""
-                    }) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                    }
-                }
-                .padding(.horizontal)
-                
-                WrapTagsView(tags: item.tags) { removed in
-                    item.tags.removeAll { $0 == removed }
-                }
-                .padding(.horizontal)
-                
+
+                // TagSelectionView - bind to item's tags
+                TagSelectionView(selectedTags: $item.tags)
+                    .padding(.horizontal)
+
                 Spacer()
             }
             .navigationTitle("Item")

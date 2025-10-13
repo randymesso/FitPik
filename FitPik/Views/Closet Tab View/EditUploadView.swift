@@ -7,7 +7,6 @@ struct EditUploadView: View {
     var onCancel: () -> Void
     
     @State private var category: ClosetCategory = .top
-    @State private var tagText: String = ""
     @State private var tags: [String] = []
     
     var body: some View {
@@ -28,39 +27,9 @@ struct EditUploadView: View {
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
                 
-                HStack {
-                    TextField("Add tag (e.g., church)", text: $tagText)
-                        .textFieldStyle(.roundedBorder)
-                    Button(action: {
-                        let t = tagText.trimmingCharacters(in: .whitespacesAndNewlines)
-                        guard !t.isEmpty else { return }
-                        tags.append(t)
-                        tagText = ""
-                    }) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                    }
-                }
-                .padding(.horizontal)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(tags, id: \.self) { t in
-                            HStack {
-                                Text(t)
-                                Button(action: {
-                                    tags.removeAll { $0 == t }
-                                }) {
-                                    Image(systemName: "xmark.circle.fill")
-                                }
-                            }
-                            .padding(8)
-                            .background(Color.secondary.opacity(0.12))
-                            .cornerRadius(12)
-                        }
-                    }
+                // Tag selection UI
+                TagSelectionView(selectedTags: $tags)
                     .padding(.horizontal)
-                }
                 
                 Spacer()
             }
